@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Missão: Corpo em Movimento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================
+       VARIÁVEIS & RESET
+    ===================================================== */
+    :root {
+      --green:        #16a34a;
+      --green-light:  #22c55e;
+      --green-pale:   #dcfce7;
+      --green-dark:   #14532d;
+      --blue:         #0ea5e9;
+      --blue-light:   #38bdf8;
+      --blue-pale:    #e0f2fe;
+      --blue-dark:    #0c4a6e;
+      --orange:       #f97316;
+      --orange-pale:  #fff7ed;
+      --red:          #ef4444;
+      --red-pale:     #fef2f2;
+      --bg:           #f0fdf4;
+      --surface:      #ffffff;
+      --surface-2:    #f8fafc;
+      --border:       #e2e8f0;
+      --text:         #1e293b;
+      --text-mid:     #475569;
+      --text-dim:     #94a3b8;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:    0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+      --shadow-lg:    0 10px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.07);
+      --radius-sm:    10px;
+      --radius:       16px;
+      --radius-lg:    24px;
+      --font-body:    'Nunito', sans-serif;
+      --font-display: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* =====================================================
+       SCREENS
+    ===================================================== */
+    .screen { display: none; }
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* =====================================================
+       TELA INICIAL — SELEÇÃO DE GRUPO
+    ===================================================== */
+    #screen-intro {
+      background: linear-gradient(160deg, #052e16 0%, #14532d 40%, #166534 100%);
+      align-items: center;
+      justify-content: flex-start;
+      padding: 48px 24px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Círculos decorativos de fundo */
+    #screen-intro::before,
+    #screen-intro::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    #screen-intro::before {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 70%);
+      top: -80px; right: -80px;
+    }
+    #screen-intro::after {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 70%);
+      bottom: 60px; left: -60px;
+    }
+
+    .intro-logo {
+      font-size: 56px;
+      margin-bottom: 16px;
+      animation: bounce-in 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes bounce-in {
+      from { transform: scale(0) rotate(-10deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+    }
+
+    .intro-eyebrow {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 10px;
+    }
+
+    .intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 8vw, 40px);
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.1;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .intro-title span { color: var(--green-light); }
+
+    .intro-subtitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    /* Card de seleção */
+    .select-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .select-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-mid);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .group-btn {
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      background: var(--surface-2);
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .group-btn:hover  { border-color: var(--green); color: var(--green); transform: scale(1.06); }
+    .group-btn.selected {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px rgba(22,163,74,0.4);
+    }
+
+    .selected-label {
+      min-height: 32px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .btn-start {
+      width: 100%;
+      padding: 17px;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(22,163,74,0.35);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .btn-start.enabled {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .btn-start.enabled:active { transform: scale(0.97); }
+
+    /* =====================================================
+       HUD
+    ===================================================== */
+    #hud {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hud-group-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green-pale);
+      border-radius: 100px;
+      padding: 5px 12px 5px 6px;
+    }
+    .hud-group-icon {
+      width: 28px; height: 28px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .hud-group-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    /* Dots de progresso */
+    .hud-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .h-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.35s;
+      flex-shrink: 0;
+    }
+    .h-dot.done    { background: var(--green); }
+    .h-dot.current {
+      background: var(--orange);
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.2);
+      animation: dot-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes dot-pulse {
+      0%,100%{ box-shadow: 0 0 0 0 rgba(249,115,22,0.35); }
+      50%    { box-shadow: 0 0 0 5px rgba(249,115,22,0); }
+    }
+
+    /* Timer */
+    #timer-display {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      background: var(--blue-pale);
+      border-radius: 100px;
+      padding: 5px 12px;
+      letter-spacing: 0.05em;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       TELA DE JOGO — ETAPAS
+    ===================================================== */
+    #screen-game {
+      background: var(--bg);
+    }
+
+    .stage {
+      display: none;
+      flex-direction: column;
+      padding: 24px 20px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      animation: slide-up 0.4s cubic-bezier(0.22,0.61,0.36,1) both;
+    }
+    .stage.active { display: flex; }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabeçalho da etapa */
+    .stage-header {
+      margin-bottom: 20px;
+    }
+
+    .stage-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .stage-step-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    .stage-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 7vw, 34px);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stage-location-line {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    /* Card de destino */
+    .destination-card {
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 6px 24px rgba(22,163,74,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .destination-card::after {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+    }
+
+    .dest-icon-wrap {
+      width: 60px; height: 60px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .dest-info {}
+    .dest-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 4px;
+    }
+    .dest-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .dest-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+
+    /* Card de instrução */
+    .instruction-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .instr-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+    .instr-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .instr-text {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    /* Input de resposta */
+    .answer-section { margin-top: auto; }
+
+    .answer-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .answer-label::before {
+      content: '';
+      display: block;
+      width: 3px; height: 14px;
+      background: var(--green);
+      border-radius: 2px;
+    }
+
+    .answer-input {
+      width: 100%;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 700;
+      padding: 15px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+      box-shadow: var(--shadow-sm);
+    }
+    .answer-input::placeholder { color: var(--text-dim); font-weight: 400; }
+    .answer-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(22,163,74,0.12);
+    }
+    .answer-input.state-error {
+      border-color: var(--red) !important;
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.1) !important;
+      animation: shake 0.35s ease;
+    }
+    .answer-input.state-ok {
+      border-color: var(--green) !important;
+      box-shadow: 0 0 0 4px rgba(22,163,74,0.15) !important;
+    }
+    @keyframes shake {
+      0%,100%{ transform: translateX(0); }
+      20%    { transform: translateX(-6px); }
+      40%    { transform: translateX(6px); }
+      60%    { transform: translateX(-4px); }
+      80%    { transform: translateX(4px); }
+    }
+
+    .btn-confirm {
+      width: 100%;
+      margin-top: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(22,163,74,0.3);
+      transition: all 0.15s;
+    }
+    .btn-confirm:active { transform: scale(0.97); }
+
+    /* Feedback */
+    .feedback-msg {
+      margin-top: 12px;
+      min-height: 40px;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s;
+      opacity: 0;
+    }
+    .feedback-msg.show { opacity: 1; }
+    .feedback-msg.ok {
+      background: var(--green-pale);
+      color: var(--green-dark);
+    }
+    .feedback-msg.err {
+      background: var(--red-pale);
+      color: #991b1b;
+    }
+
+    /* =====================================================
+       TELA FINAL — VITÓRIA
+    ===================================================== */
+    #screen-win {
+      background: linear-gradient(160deg, #0c4a6e 0%, #0ea5e9 50%, #16a34a 100%);
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #screen-win::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .win-trophy {
+      font-size: 80px;
+      margin-bottom: 16px;
+      animation: trophy-pop 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+      position: relative;
+      z-index: 1;
+    }
+    @keyframes trophy-pop {
+      from { transform: scale(0) rotate(-15deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+    }
+
+    .win-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 9vw, 50px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.05;
+      margin-bottom: 6px;
+      position: relative; z-index: 1;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.2);
+    }
+
+    .win-sub {
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 36px;
+      position: relative; z-index: 1;
+    }
+
+    .win-card {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 32px;
+      position: relative; z-index: 1;
+    }
+
+    .win-group-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 8px;
+    }
+
+    .win-time-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+    }
+
+    .win-time-value {
+      font-family: var(--font-display);
+      font-size: 58px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.04em;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .win-steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .win-step-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+    }
+    .win-step-dot.done { background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.6); }
+
+    .win-message {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.8;
+    }
+
+    .btn-restart {
+      padding: 14px 36px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative; z-index: 1;
+    }
+    .btn-restart:hover { background: rgba(255,255,255,0.25); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       TELA 1 — SELEÇÃO DE GRUPO
+  ============================================ -->
+  <section id="screen-intro" class="screen active" aria-label="Seleção de grupo">
+    <div class="intro-logo" aria-hidden="true">🏃‍♂️</div>
+    <p class="intro-eyebrow">Jogo Educativo — Ed. Física</p>
+    <h1 class="intro-title">Missão:<br><span>Corpo em<br>Movimento</span></h1>
+    <p class="intro-subtitle">Benefícios da Atividade Física</p>
+
+    <div class="select-card">
+      <p class="select-label">Qual é o número do seu grupo?</p>
+
+      <div class="group-grid" role="group" aria-label="Selecionar grupo">
+        <button class="group-btn" onclick="selectGroup(1)" aria-label="Grupo 1">1</button>
+        <button class="group-btn" onclick="selectGroup(2)" aria-label="Grupo 2">2</button>
+        <button class="group-btn" onclick="selectGroup(3)" aria-label="Grupo 3">3</button>
+        <button class="group-btn" onclick="selectGroup(4)" aria-label="Grupo 4">4</button>
+        <button class="group-btn" onclick="selectGroup(5)" aria-label="Grupo 5">5</button>
+      </div>
+
+      <p class="selected-label" id="selected-label" aria-live="polite"></p>
+
+      <button class="btn-start" id="btn-start" onclick="initGame()" disabled aria-label="Iniciar missão">
+        🚀 INICIAR MISSÃO
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 2 — JOGO
+  ============================================ -->
+  <section id="screen-game" class="screen" aria-label="Jogo em andamento">
+
+    <!-- HUD fixo -->
+    <div id="hud">
+      <div class="hud-group-badge">
+        <div class="hud-group-icon" id="hud-group-num">1</div>
+        <span class="hud-group-text" id="hud-group-label">Grupo 1</span>
+      </div>
+      <div class="hud-dots" id="hud-dots" role="progressbar" aria-label="Progresso das etapas"></div>
+      <div id="timer-display" aria-live="polite" aria-label="Tempo decorrido">00:00</div>
+    </div>
+
+    <!-- As 5 etapas são geradas dinamicamente pelo JS -->
+    <div id="stages-container"></div>
+
+  </section>
+
+  <!-- ============================================
+       TELA 3 — VITÓRIA
+  ============================================ -->
+  <section id="screen-win" class="screen" aria-label="Missão concluída">
+    <div class="win-trophy" aria-hidden="true">🏆</div>
+    <h2 class="win-title">Parabéns!<br>Missão<br>Concluída!</h2>
+    <p class="win-sub" id="win-group-label">Grupo 1</p>
+
+    <div class="win-card">
+      <p class="win-time-label">⏱ Tempo Total</p>
+      <p class="win-time-value" id="win-time">--:--</p>
+      <div class="win-steps" id="win-steps"></div>
+      <p class="win-message">
+        Vocês percorreram todos os 5 locais e responderam corretamente sobre os benefícios da atividade física.<br><br>
+        <strong style="color:#fff">Continue se movimentando! 💪</strong>
+      </p>
+    </div>
+
+    <button class="btn-restart" onclick="restartGame()">↺ Jogar Novamente</button>
+  </section>
+
+
+  <!-- ============================================
+       JAVASCRIPT
+  ============================================ -->
+  <script>
+    /* ============================================================
+       CONFIGURAÇÃO DOS LOCAIS
+    ============================================================ */
+    const LOCATIONS = [
+      { id: 'sala',      name: 'Sala de Aula',  icon: '🏫', hint: 'Volte para a sala e aguarde o professor.' },
+      { id: 'catraca',   name: 'Catraca',        icon: '🚪', hint: 'Vá até a catraca da entrada.' },
+      { id: 'biblioteca',name: 'Biblioteca',     icon: '📚', hint: 'Suba até a biblioteca.' },
+      { id: 'elevador',  name: 'Elevador',       icon: '🛗', hint: 'Encontre o elevador do prédio.' },
+      { id: 'terraco',   name: 'Terraço',        icon: '🌤️', hint: 'Suba até o terraço.' },
+    ];
+
+    /*
+     * ORDEM DE ROTAÇÃO DOS GRUPOS
+     * Cada grupo percorre os 5 locais em ordem diferente (sem aglomeração).
+     *
+     * Grupo 1: Sala → Catraca → Biblioteca → Elevador → Terraço
+     * Grupo 2: Catraca → Biblioteca → Elevador → Terraço → Sala
+     * Grupo 3: Biblioteca → Elevador → Terraço → Sala → Catraca
+     * Grupo 4: Elevador → Terraço → Sala → Catraca → Biblioteca
+     * Grupo 5: Terraço → Sala → Catraca → Biblioteca → Elevador
+     */
+    const ROTATION = {
+      1: [0, 1, 2, 3, 4],
+      2: [1, 2, 3, 4, 0],
+      3: [2, 3, 4, 0, 1],
+      4: [3, 4, 0, 1, 2],
+      5: [4, 0, 1, 2, 3],
+    };
+
+    /* ============================================================
+       RESPOSTAS — ARMAZENADAS COMO HASH (djb2)
+       As respostas são associadas ao ID de cada local.
+       Para recalcular um hash, use no console:
+         function h(s){let v=5381;for(let i=0;i<s.length;i++)v=((v<<5)+v)+s.charCodeAt(i);return v>>>0;} console.log(h("resposta"))
+
+       Respostas (normalizadas: minúsculo, sem acento, sem espaço):
+         sala:       "coracao"           → saúde cardiovascular / coração
+         catraca:    "endorfina"         → hormônio do bem-estar
+         biblioteca: "ossos"             → fortalece ossos e músculos
+         elevador:   "sono"              → melhora o sono
+         terraco:    "estresse"          → reduz o estresse / ansiedade
+    ============================================================ */
+    const ANSWER_HASHES = {
+      sala:       hash('coracao'),
+      catraca:    hash('endorfina'),
+      biblioteca: hash('ossos'),
+      elevador:   hash('sono'),
+      terraco:    hash('estresse'),
+    };
+
+    /** Hash djb2 */
+    function hash(str) {
+      let h = 5381;
+      for (let i = 0; i < str.length; i++) {
+        h = ((h << 5) + h) + str.charCodeAt(i);
+      }
+      return h >>> 0;
+    }
+
+    /** Normaliza a string: minúsculo, sem acento, sem espaço */
+    function normalize(s) {
+      return s
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '')
+        .trim();
+    }
+
+    /* ============================================================
+       ESTADO GLOBAL
+    ============================================================ */
+    let selectedGroup  = null;  // 1–5
+    let currentStep    = 0;     // índice 0–4 dentro da rota do grupo
+    let timerInterval  = null;
+    let startTime      = 0;
+    let groupRoute     = [];    // array de índices de LOCATIONS para o grupo
+
+    /* ============================================================
+       SELEÇÃO DE GRUPO (tela intro)
+    ============================================================ */
+    function selectGroup(n) {
+      selectedGroup = n;
+
+      // Atualiza visuais dos botões
+      document.querySelectorAll('.group-btn').forEach((btn, i) => {
+        btn.classList.toggle('selected', i + 1 === n);
+      });
+
+      document.getElementById('selected-label').textContent = `Grupo ${n} selecionado ✓`;
+
+      const btnStart = document.getElementById('btn-start');
+      btnStart.classList.add('enabled');
+      btnStart.disabled = false;
+    }
+
+    /* ============================================================
+       INICIAR JOGO
+    ============================================================ */
+    function initGame() {
+      if (!selectedGroup) return;
+
+      currentStep = 0;
+      groupRoute  = ROTATION[selectedGroup].map(i => LOCATIONS[i]);
+
+      // Atualiza HUD
+      document.getElementById('hud-group-num').textContent   = selectedGroup;
+      document.getElementById('hud-group-label').textContent = `Grupo ${selectedGroup}`;
+      buildHudDots();
+
+      // Gera etapas dinamicamente
+      buildStages();
+
+      // Mostra tela de jogo
+      showScreen('screen-game');
+
+      // Inicia cronômetro
+      startTime = Date.now();
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+      updateTimer();
+
+      // Ativa etapa 0
+      activateStep(0);
+    }
+
+    /* ============================================================
+       CONSTRUIR DOTS DO HUD
+    ============================================================ */
+    function buildHudDots() {
+      const container = document.getElementById('hud-dots');
+      container.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'h-dot';
+        dot.id = 'hdot-' + i;
+        container.appendChild(dot);
+      }
+    }
+
+    /* ============================================================
+       CONSTRUIR ETAPAS DINAMICAMENTE
+    ============================================================ */
+    function buildStages() {
+      const container = document.getElementById('stages-container');
+      container.innerHTML = '';
+
+      groupRoute.forEach((loc, stepIdx) => {
+        const article = document.createElement('article');
+        article.className = 'stage';
+        article.id = 'stage-' + stepIdx;
+        article.setAttribute('aria-label', `Etapa ${stepIdx + 1}`);
+
+        article.innerHTML = `
+          <div class="stage-header">
+            <p class="stage-step">
+              <span class="stage-step-dot"></span>
+              Etapa ${stepIdx + 1} de 5
+            </p>
+            <h2 class="stage-title">${loc.name}</h2>
+            <p class="stage-location-line">Etapa ${stepIdx + 1} da missão</p>
+          </div>
+
+          <div class="destination-card">
+            <div class="dest-icon-wrap">${loc.icon}</div>
+            <div class="dest-info">
+              <p class="dest-label">Vá até</p>
+              <p class="dest-name">${loc.name}</p>
+              <p class="dest-sub">${loc.hint}</p>
+            </div>
+          </div>
+
+          <div class="instruction-card">
+            <span class="instr-icon">💬</span>
+            <p class="instr-title">O que fazer</p>
+            <p class="instr-text">
+              Chegue ao local e aguarde o professor fazer a pergunta sobre
+              <strong>benefícios da atividade física</strong>. Discuta com seu grupo
+              e digite a resposta abaixo.
+            </p>
+          </div>
+
+          <div class="answer-section">
+            <p class="answer-label">Resposta do grupo</p>
+            <input
+              class="answer-input"
+              id="inp-${stepIdx}"
+              type="text"
+              inputmode="text"
+              placeholder="Digite a resposta aqui..."
+              maxlength="60"
+              autocomplete="off"
+              aria-label="Campo de resposta da etapa ${stepIdx + 1}"
+            />
+            <button class="btn-confirm" onclick="checkAnswer(${stepIdx})">
+              ✓ Confirmar Resposta
+            </button>
+            <div class="feedback-msg" id="fb-${stepIdx}" role="alert" aria-live="assertive"></div>
+          </div>
+        `;
+
+        container.appendChild(article);
+
+        // Enter confirma resposta
+        const input = article.querySelector('.answer-input');
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') checkAnswer(stepIdx);
+        });
+      });
+    }
+
+    /* ============================================================
+       ATIVAR ETAPA
+    ============================================================ */
+    function activateStep(idx) {
+      // Esconde todas
+      document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+
+      // Mostra a atual
+      const stage = document.getElementById('stage-' + idx);
+      if (stage) stage.classList.add('active');
+
+      // Atualiza dots
+      for (let i = 0; i < 5; i++) {
+        const dot = document.getElementById('hdot-' + i);
+        if (!dot) continue;
+        dot.classList.remove('done', 'current');
+        if (i < idx)  dot.classList.add('done');
+        if (i === idx) dot.classList.add('current');
+      }
+
+      currentStep = idx;
+
+      // Scroll topo e foca input
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => document.getElementById('inp-' + idx)?.focus(), 400);
+    }
+
+    /* ============================================================
+       VALIDAR RESPOSTA
+    ============================================================ */
+    function checkAnswer(stepIdx) {
+      const input    = document.getElementById('inp-' + stepIdx);
+      const feedback = document.getElementById('fb-'  + stepIdx);
+      const loc      = groupRoute[stepIdx];
+
+      if (!input || !feedback || !loc) return;
+
+      const raw        = input.value.trim();
+      const normalized = normalize(raw);
+
+      // Limpa estados anteriores
+      input.classList.remove('state-error', 'state-ok');
+      feedback.classList.remove('show', 'ok', 'err');
+      feedback.innerHTML = '';
+
+      if (!normalized) {
+        showFeedback(feedback, input, false, '⚠️ Digite uma resposta antes de confirmar.');
+        return;
+      }
+
+      const correct = (hash(normalized) === ANSWER_HASHES[loc.id]);
+
+      if (correct) {
+        /* ---- ACERTO ---- */
+        input.classList.add('state-ok');
+        input.disabled = true;
+        showFeedback(feedback, input, true, '✅ Resposta correta! Avançando...');
+
+        // Marca dot como done
+        const dot = document.getElementById('hdot-' + stepIdx);
+        if (dot) { dot.classList.remove('current'); dot.classList.add('done'); }
+
+        setTimeout(() => {
+          if (stepIdx < 4) {
+            activateStep(stepIdx + 1);
+          } else {
+            finishGame();
+          }
+        }, 1000);
+
+      } else {
+        /* ---- ERRO ---- */
+        showFeedback(feedback, input, false, '❌ Resposta incorreta, tente novamente.');
+        setTimeout(() => input.classList.remove('state-error'), 500);
+      }
+    }
+
+    function showFeedback(el, input, isOk, msg) {
+      input.classList.add(isOk ? 'state-ok' : 'state-error');
+      el.className = 'feedback-msg show ' + (isOk ? 'ok' : 'err');
+      el.innerHTML = msg;
+    }
+
+    /* ============================================================
+       CRONÔMETRO
+    ============================================================ */
+    function updateTimer() {
+      const secs = Math.floor((Date.now() - startTime) / 1000);
+      document.getElementById('timer-display').textContent = formatTime(secs);
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60).toString().padStart(2, '0');
+      const sec = (s % 60).toString().padStart(2, '0');
+      return `${m}:${sec}`;
+    }
+
+    /* ============================================================
+       FINALIZAR JOGO
+    ============================================================ */
+    function finishGame() {
+      clearInterval(timerInterval);
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+
+      document.getElementById('win-time').textContent      = formatTime(elapsed);
+      document.getElementById('win-group-label').textContent = `Grupo ${selectedGroup}`;
+
+      // Dots de vitória
+      const stepsEl = document.getElementById('win-steps');
+      stepsEl.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const d = document.createElement('div');
+        d.className = 'win-step-dot done';
+        stepsEl.appendChild(d);
+      }
+
+      setTimeout(() => showScreen('screen-win'), 700);
+    }
+
+    /* ============================================================
+       REINICIAR
+    ============================================================ */
+    function restartGame() {
+      selectedGroup = null;
+      currentStep   = 0;
+      clearInterval(timerInterval);
+
+      // Reseta botões de grupo
+      document.querySelectorAll('.group-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('selected-label').textContent = '';
+      const btnStart = document.getElementById('btn-start');
+      btnStart.classList.remove('enabled');
+      btnStart.disabled = true;
+
+      showScreen('screen-intro');
+    }
+
+    /* ============================================================
+       TROCAR TELA
+    ============================================================ */
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
